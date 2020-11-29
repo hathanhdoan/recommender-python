@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     # ex: /polls/
+    path('/', views.hello, name='hello'),
     path('get-rec-item/', views.getSimItem, name='hehe'),
     path('go/', views.go, name='test'),
     path('', views.index, name='index'),

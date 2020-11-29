@@ -27,6 +27,8 @@ from rest_framework import status
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "website.settings")
 django.setup()
+def hello(request):
+    return JsonResponse({"message" : "HELLO"})
 def hehe(request):
    return JsonResponse({"message" : "hehe"})
 def getSimItem(request):

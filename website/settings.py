@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'website.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'heroku_a32193aca965385',
-        'USER': 'b34e6243616bbd',
-        'PASSWORD': 'a7ae59d8',
-        'HOST': 'us-cdbr-east-02.cleardb.com',
+        'NAME': 'recommender',
+        'USER': 'doan@recommender-2oclock',
+        'PASSWORD': 'Admin123456',
+        'HOST': 'recommender-2oclock.mysql.database.azure.com',
         'PORT': '3306',
     }
 }

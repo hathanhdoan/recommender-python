@@ -25,7 +25,7 @@ SECRET_KEY = '2c419cb5f58ef38701c51f8f6e689c8c80e7c9e6001518f5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['recommender-2oclock.herokuapp.com']
+ALLOWED_HOSTS = ['recommender-2oclock.herokuapp.com','127.0.0.1']
 
 
 # Application definition
@@ -84,6 +84,14 @@ DATABASES = {
         'HOST': 'recommender-2oclock.mysql.database.azure.com',
         'PORT': '3306',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'foody2',
+    #     'USER': 'root',
+    #     'PASSWORD': '',
+    #     'HOST': 'localhost',
+    #     'PORT': '3306',
+    # }
 }
 
 

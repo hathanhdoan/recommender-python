@@ -24,20 +24,21 @@ import sklearn
 from sklearn.decomposition import TruncatedSVD
 from django.http import JsonResponse
 from rest_framework import status
-
+from django.views.decorators.csrf import csrf_exempt
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "website.settings")
 django.setup()
 def hello(request):
     return JsonResponse({"message" : "HELLO"})
 def hehe(request):
    return JsonResponse({"message" : "hehe"})
-def getSimItem(request):
+def getSimItem():
     rs = NeighborhoodBasedRecs.recommend_items(NeighborhoodBasedRecs,user_id=43037)
-    return JsonResponse(rs, safe=False)
-
+    # return JsonResponse(rs, safe=False)
+    return rs
+@csrf_exempt
 def go(request):
     search_trains = SearchTrain.objects.values('id','action','input')
-    query = 'gần đây có cửa hàng nào gần nhất không'
+    query = 'Thoát tài khoản ra khỏi website'
     query = query.lower()
     newItems = []
     for item in tqdm(search_trains):
@@ -61,10 +62,20 @@ def go(request):
     sim_maxtrix = np.reshape(sim_maxtrix, (-1,))
 
     idx = (-sim_maxtrix).argsort()[:20]
+    rs = []
     for _id in idx:
-        print(_id, sim_maxtrix[_id])
-        print(newItems[_id]['action'].upper())
-
+        temp = {}
+        temp['id'] = newItems[_id]['id']
+        temp['action'] = newItems[_id]['action'].upper()
+        temp['sim'] = sim_maxtrix[_id]
+        rs.append(temp)
+        # print(_id, sim_maxtrix[_id])
+        # print(newItems[_id]['action'].upper())
+    args = {
+        'success' : 1,
+        'data' : rs
+    }
+    return JsonResponse(args, safe=False)
     # return tfidf_vectors
 
 
@@ -98,10 +109,11 @@ def test(request):
     return render(request, 'polls/test.html', None)
 
 
-def runalgorithm(request):
+def runalgorithm():
     all_ratings = load_all_ratings()
-    ItemSimilarityMatrixBuilder(min_overlap=10, min_sim=0.0).build(all_ratings)
-    return HttpResponse("Done.")
+    return ItemSimilarityMatrixBuilder(min_overlap=10, min_sim=0.0).build(all_ratings)
+    # return HttpResponse("Done.")
+    return "DONE"
 
 
 def load_all_ratings(min_rating=1):
@@ -145,7 +157,8 @@ class ItemSimilarityMatrixBuilder(object):
         coo = coo_matrix((ratings['avg'].astype(float),
                           (ratings['resid'].cat.codes.copy(),
                            ratings['owner'].cat.codes.copy())))
-
+        print(coo)
+        return 2222
         logger.debug("Calculating overlaps between the items")
         overlap_matrix = coo.astype(bool).astype(int).dot(coo.transpose().astype(bool).astype(int))
 
@@ -170,7 +183,6 @@ class ItemSimilarityMatrixBuilder(object):
         cor = cor.multiply(overlap_matrix > self.min_overlap)
 
         res = dict(enumerate(ratings['resid'].cat.categories))
-
         logger.debug('Correlation is finished, done in {} seconds'.format(datetime.now() - start_time))
         if save:
 

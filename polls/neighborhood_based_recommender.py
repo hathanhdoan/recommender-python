@@ -50,7 +50,7 @@ class NeighborhoodBasedRecs:
                     sim_sum += sim_item.similarity
                 if sim_sum > 0:
                     recs[target] = {'prediction': Decimal(user_mean) + pre / sim_sum,
-                                    'sim_items': [r.source for r in rated_items]}
+                                    'sim_items': [{'id':r.source,'sim':r.similarity} for r in rated_items]}
 
         sorted_items = sorted(recs.items(), key=lambda item: -float(item[1]['prediction']))[:num]
         return sorted_items

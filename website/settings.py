@@ -27,6 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['recommender-2oclock.herokuapp.com','127.0.0.1']
 
+CORS_ALLOWED_ORIGINS = [
+    "http://dev.toang.com",
+    "https://web-2oclock.herokuapp.com",
+    "http://localhost:8080",
+    "http://127.0.0.1:9000"
+]
 
 # Application definition
 
@@ -38,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'polls.apps.PollsConfig',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +55,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'website.urls'

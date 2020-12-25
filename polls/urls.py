@@ -6,7 +6,7 @@ urlpatterns = [
     # ex: /polls/
     path('/hello', views.hello, name='hello'),
     path('get-rec-item/', views.getSimItem, name='hehe'),
-    path('go/', views.go, name='test'),
+    path('go', views.go, name='test'),
     path('', views.index, name='index'),
     # ex: /polls/5/
     path('<int:question_id>/', views.detail, name='detail'),

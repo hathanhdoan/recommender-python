@@ -37,8 +37,11 @@ def getSimItem():
     return rs
 @csrf_exempt
 def go(request):
+    query = request.GET.get('query')
+    # return JsonResponse(query , safe=False)
     search_trains = SearchTrain.objects.values('id','action','input')
-    query = 'Thoát tài khoản ra khỏi website'
+    # query = 'Thoát tài khoản ra khỏi website'
+
     query = query.lower()
     newItems = []
     for item in tqdm(search_trains):

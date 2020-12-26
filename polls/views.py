@@ -36,11 +36,11 @@ def getSimItem():
     # return JsonResponse(rs, safe=False)
     return rs
 @csrf_exempt
-def go(request):
-    query = request.GET.get('query')
+def go():
+    # query = request.GET.get('query')
     # return JsonResponse(query , safe=False)
     search_trains = SearchTrain.objects.values('id','action','input')
-    # query = 'Thoát tài khoản ra khỏi website'
+    query = 'Thoát tài khoản ra khỏi website'
 
     query = query.lower()
     newItems = []
@@ -78,15 +78,14 @@ def go(request):
         'success' : 1,
         'data' : rs
     }
+    return args
     return JsonResponse(args, safe=False)
     # return tfidf_vectors
-
 
 def index(request):
     latest_customer_list = Customers.objects.order_by('id')[:10]
     context = {'latest_customer_list': latest_customer_list}
     return render(request, 'polls/index.html', context)
-
 
 # Create your views here.
 

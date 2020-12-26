@@ -36,7 +36,7 @@ def getSimItem():
     # return JsonResponse(rs, safe=False)
     return rs
 @csrf_exempt
-def go():
+def go(request):
     # query = request.GET.get('query')
     # return JsonResponse(query , safe=False)
     search_trains = SearchTrain.objects.values('id','action','input')
@@ -78,7 +78,7 @@ def go():
         'success' : 1,
         'data' : rs
     }
-    return args
+
     return JsonResponse(args, safe=False)
     # return tfidf_vectors
 

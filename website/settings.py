@@ -28,12 +28,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['recommender-2oclock.herokuapp.com','127.0.0.1']
 
-CORS_ALLOWED_ORIGINS = [
-    "http://dev.toang.com",
-    "https://web-2oclock.herokuapp.com",
-    "http://localhost:8080",
-    "http://127.0.0.1:9000"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://dev.toang.com",
+#     "https://web-2oclock.herokuapp.com",
+#     "http://localhost:8080",
+#     "http://127.0.0.1:9000"
+# ]
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 

@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['recommender-2oclock.herokuapp.com','127.0.0.1']
 #     "http://127.0.0.1:9000"
 # ]
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = False
 
 # Application definition
 

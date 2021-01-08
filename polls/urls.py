@@ -15,5 +15,6 @@ urlpatterns = [
     # ex: /polls/5/vote/
     path('<int:question_id>/vote/', views.vote, name='vote'),
     path('voice/', views.voice, name='voice'),
+    path('get-sim', views.getSimItem, name='getSim'),
     path('runalgorithm/', views.runalgorithm, name='runalgorithm')
 ]

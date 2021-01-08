@@ -31,16 +31,22 @@ def hello(request):
     return JsonResponse({"message" : "HELLO"})
 def hehe(request):
    return JsonResponse({"message" : "hehe"})
-def getSimItem():
-    rs = NeighborhoodBasedRecs.recommend_items(NeighborhoodBasedRecs,user_id=43037)
-    # return JsonResponse(rs, safe=False)
-    return rs
+def getSimItem(request):
+    user_id = request.GET.get('user_id')
+    user_id = int(user_id)
+    rs = NeighborhoodBasedRecs.recommend_items(NeighborhoodBasedRecs,user_id) #43037 535814
+    args = {
+        'success' :1,
+        'data' : rs
+    }
+    return JsonResponse(args, safe=False)
+    # return rs
 @csrf_exempt
 def go(request):
     # query = request.GET.get('query')
     # return JsonResponse(query , safe=False)
     search_trains = SearchTrain.objects.values('id','action','input')
-    query = 'Thoát tài khoản ra khỏi website'
+    query = 'Còn nhà hàng nào mở cửa không'
 
     query = query.lower()
     newItems = []
@@ -53,6 +59,7 @@ def go(request):
     inputCounter = tf_idf_cal.count_word_in_dataset(newItems)
     tfidf_vectors = []
     corpus_len = len(newItems)
+
     for item in tqdm(newItems):
         doc_len = len(item['input'])
         tfidf_vectors.append(
@@ -78,7 +85,7 @@ def go(request):
         'success' : 1,
         'data' : rs
     }
-
+    # return args
     return JsonResponse(args, safe=False)
     # return tfidf_vectors
 
@@ -86,6 +93,7 @@ def index(request):
     latest_customer_list = Customers.objects.order_by('id')[:10]
     context = {'latest_customer_list': latest_customer_list}
     return render(request, 'polls/index.html', context)
+
 
 # Create your views here.
 
@@ -111,18 +119,21 @@ def test(request):
     return render(request, 'polls/test.html', None)
 
 
-def runalgorithm():
+def runalgorithm(request):
     all_ratings = load_all_ratings()
-    return ItemSimilarityMatrixBuilder(min_overlap=10, min_sim=0.0).build(all_ratings)
+    ItemSimilarityMatrixBuilder(min_overlap=10, min_sim=0.0).build(all_ratings)
     # return HttpResponse("Done.")
-    return "DONE"
+    args = {
+        'success' : 1,
+        'message' : 'DONE'
+    }
+    # return args
+    return JsonResponse(args, safe=False)
 
 
 def load_all_ratings(min_rating=1):
     columns = ['owner', 'resid', 'avgrating']
-
     ratings_data = Comments.objects.all().values('owner', 'resid', 'avgrating')
-
     ratings = pd.DataFrame.from_records(ratings_data, columns=columns)
     ctm_count = ratings[['owner', 'resid']].groupby('owner').count()
     ctm_count = ctm_count.reset_index()
@@ -148,10 +159,14 @@ class ItemSimilarityMatrixBuilder(object):
         start_time = datetime.now()
 
         logger.debug("Creating ratings matrix")
-
         ratings['avgrating'] = ratings['avgrating'].astype(float)
-        ratings['avg'] = ratings['avgrating'].transform(lambda x: normalize(x))
-
+        # print(ratings[ratings['resid'] == 1259])
+        # logger.debug("......")
+        # print(ratings[ratings['resid'] == 1024])
+        # return 2
+        ratings['avg'] = ratings.groupby('resid')['avgrating'].transform(lambda x: normalize(x))
+        # return ratings
+        # return ratings[ratings['resid'] == 687]
         ratings['avg'] = ratings['avg'].astype(float)
         ratings['owner'] = ratings['owner'].astype('category')
         ratings['resid'] = ratings['resid'].astype('category')
@@ -159,8 +174,7 @@ class ItemSimilarityMatrixBuilder(object):
         coo = coo_matrix((ratings['avg'].astype(float),
                           (ratings['resid'].cat.codes.copy(),
                            ratings['owner'].cat.codes.copy())))
-        print(coo)
-        return 2222
+
         logger.debug("Calculating overlaps between the items")
         overlap_matrix = coo.astype(bool).astype(int).dot(coo.transpose().astype(bool).astype(int))
 

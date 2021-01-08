@@ -46,6 +46,7 @@ class tf_idf_cal:
           Kết quả trả về là 1 vector cho document.
         '''
 
+        test = {}
         vector_len = len(corpus_counter)
         tfidf_vector = np.zeros((vector_len,))
         for i, key in enumerate(corpus_counter.keys()):
@@ -53,4 +54,5 @@ class tf_idf_cal:
                 tf = (k+1)*doc_counter[key]/(k+doc_counter[key])
                 idf = math.log((corpus_len+1)/(corpus_counter[key]))
                 tfidf_vector[i] = tf*idf
+
         return tfidf_vector

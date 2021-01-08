@@ -28,11 +28,11 @@ class NeighborhoodBasedRecs:
         start = time.time()
         res_ids = {res['resid_id']: res['avgrating'] for res in active_user_items}
         user_mean = sum(res_ids.values()) / len(res_ids)
-
         candidate_items = Similarity.objects.filter(Q(source__in=res_ids.keys())
                                                     & ~Q(target__in=res_ids.keys())
                                                     & Q(similarity__gt= min_sim)
                                                     )
+
         candidate_items = candidate_items.order_by('-similarity')[:max_candidates]
 
         recs = dict()
@@ -42,7 +42,8 @@ class NeighborhoodBasedRecs:
             sim_sum = 0
 
             rated_items = [i for i in candidate_items if i.target == target][:neighborhood_size]
-
+            # print('rated_items')
+            # return rated_items
             if len(rated_items) > 0:
                 for sim_item in rated_items:
                     r = Decimal(res_ids[sim_item.source] - user_mean)

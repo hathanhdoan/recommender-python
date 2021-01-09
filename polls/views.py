@@ -43,10 +43,10 @@ def getSimItem(request):
     # return rs
 @csrf_exempt
 def go(request):
-    # query = request.GET.get('query')
+    query = request.GET.get('query')
     # return JsonResponse(query , safe=False)
     search_trains = SearchTrain.objects.values('id','action','input')
-    query = 'Còn nhà hàng nào mở cửa không'
+    # query = 'Còn nhà hàng nào mở cửa không'
 
     query = query.lower()
     newItems = []

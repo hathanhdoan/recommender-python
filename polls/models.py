@@ -17,6 +17,16 @@ class SearchTrain(models.Model):
         managed = False
         db_table = 'search_train'
 
+class Categories(models.Model):
+    id = models.AutoField(db_column='id', primary_key=True)  # Field name made lowercase.
+    name = models.CharField(db_column='name', max_length=255)
+    status = models.IntegerField(db_column='status', max_length=255)
+    parent_id = models.IntegerField(db_column='parent_id', max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'categories'
+
 
 class CommentLikes(models.Model):
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.

@@ -5,6 +5,7 @@ from .models import Customers
 from .models import Comments
 from .models import Similarity
 from .models import SearchTrain
+from .models import Categories
 from .tf_idf import tf_idf_cal
 from .neighborhood_based_recommender import NeighborhoodBasedRecs
 from django.shortcuts import get_object_or_404
@@ -88,6 +89,53 @@ def go(request):
     # return args
     return JsonResponse(args, safe=False)
     # return tfidf_vectors
+
+def findCategory(request):
+    # query = request.GET.get('query')
+    # return JsonResponse(query , safe=False)
+    categories = Categories.objects.values('id','name')
+    query = 'Còn quán cà phê nào mở cửa không'
+    query = query.lower()
+    newItems = []
+    for item in tqdm(categories):
+        newItem = tf_idf_cal.lowercase_data(item)
+        newItem['unigram_input'] = tf_idf_cal.count_unigram(newItem['name'])
+        newItems.append(newItem)
+    newItems.append({'id':'query','name': query, 'unigram_input':tf_idf_cal.count_unigram(query)})
+    # Tính vector cho description_document cho từng sản phẩm
+    inputCounter = tf_idf_cal.count_word_in_dataset(newItems)
+    tfidf_vectors = []
+    corpus_len = len(newItems)
+
+    for item in tqdm(newItems):
+        doc_len = len(item['name'])
+        tfidf_vectors.append(
+            tf_idf_cal.tfidf(doc_len, corpus_len, item['unigram_input'], inputCounter)
+        )
+    query_vector = tfidf_vectors[len(tfidf_vectors)-1]
+    query_vector = np.reshape(query_vector, (1,-1))
+    # search
+    sim_maxtrix = sklearn.metrics.pairwise.cosine_similarity(query_vector, tfidf_vectors)
+    sim_maxtrix = np.reshape(sim_maxtrix, (-1,))
+
+    idx = (-sim_maxtrix).argsort()[:20]
+    rs = []
+    for _id in idx:
+        temp = {}
+        temp['id'] = newItems[_id]['id']
+        temp['name'] = newItems[_id]['name'].upper()
+        temp['sim'] = sim_maxtrix[_id]
+        rs.append(temp)
+        # print(_id, sim_maxtrix[_id])
+        # print(newItems[_id]['action'].upper())
+    args = {
+        'success' : 1,
+        'data' : rs
+    }
+    # return args
+    return JsonResponse(args, safe=False)
+    # return tfidf_vectors
+
 
 def index(request):
     latest_customer_list = Customers.objects.order_by('id')[:10]

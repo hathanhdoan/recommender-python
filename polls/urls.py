@@ -7,6 +7,7 @@ urlpatterns = [
     path('/hello', views.hello, name='hello'),
     path('get-rec-item/', views.getSimItem, name='hehe'),
     path('go', views.go, name='test'),
+    path('category', views.findCategory, name='find_category'),
     path('', views.index, name='index'),
     # ex: /polls/5/
     path('<int:question_id>/', views.detail, name='detail'),

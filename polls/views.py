@@ -91,10 +91,10 @@ def go(request):
     # return tfidf_vectors
 
 def findCategory(request):
-    # query = request.GET.get('query')
+    query = request.GET.get('query')
     # return JsonResponse(query , safe=False)
     categories = Categories.objects.values('id','name')
-    query = 'Còn quán cà phê nào mở cửa không'
+    # query = 'Còn quán cà phê nào mở cửa không'
     query = query.lower()
     newItems = []
     for item in tqdm(categories):

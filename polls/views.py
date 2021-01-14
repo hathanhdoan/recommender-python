@@ -32,9 +32,11 @@ def hello(request):
     return JsonResponse({"message" : "HELLO"})
 def hehe(request):
    return JsonResponse({"message" : "hehe"})
+@csrf_exempt
 def getSimItem(request):
     user_id = request.GET.get('user_id')
     user_id = int(user_id)
+    # user_id = 535814
     rs = NeighborhoodBasedRecs.recommend_items(NeighborhoodBasedRecs,user_id) #43037 535814
     args = {
         'success' :1,
@@ -87,7 +89,7 @@ def go(request):
         'data' : rs
     }
     # return args
-    return JsonResponse(args, safe=False)
+    return JsonResponse(args['data'][1], safe=False)
     # return tfidf_vectors
 
 def findCategory(request):

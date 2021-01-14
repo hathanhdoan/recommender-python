@@ -84,16 +84,25 @@ def go(request):
         rs.append(temp)
         # print(_id, sim_maxtrix[_id])
         # print(newItems[_id]['action'].upper())
+    category = findCategory(query)
+    if(category['success']):
+        if(category['data'][1] and category['data'][1]['sim']>0.25):
+            category= category['data'][1]
+        else:
+            category=''
+    else:
+        category=''
     args = {
         'success' : 1,
-        'data' : rs
+        'data' : rs,
+        'category': category
     }
     # return args
-    return JsonResponse(args['data'][1], safe=False)
+    return JsonResponse(args, safe=False)
     # return tfidf_vectors
 
-def findCategory(request):
-    query = request.GET.get('query')
+def findCategory(query):
+
     # return JsonResponse(query , safe=False)
     categories = Categories.objects.values('id','name')
     # query = 'Còn quán cà phê nào mở cửa không'
@@ -134,8 +143,8 @@ def findCategory(request):
         'success' : 1,
         'data' : rs
     }
-    # return args
-    return JsonResponse(args, safe=False)
+    return args
+    # return JsonResponse(args, safe=False)
     # return tfidf_vectors
 
 

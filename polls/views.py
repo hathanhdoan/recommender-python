@@ -47,6 +47,7 @@ def getSimItem(request):
 @csrf_exempt
 def go(request):
     query = request.GET.get('query')
+    # query = "nhà hàng nào ngán nhất"
     # return JsonResponse(query , safe=False)
     search_trains = SearchTrain.objects.values('id','action','input')
     # query = 'Còn nhà hàng nào mở cửa không'
@@ -60,15 +61,17 @@ def go(request):
     newItems.append({'id':'query','action':'QUERY','input': query, 'unigram_input':tf_idf_cal.count_unigram(query)})
     # Tính vector cho description_document cho từng sản phẩm
     inputCounter = tf_idf_cal.count_word_in_dataset(newItems)
+    # return inputCounter
     tfidf_vectors = []
     corpus_len = len(newItems)
-
+    # return corpus_len
     for item in tqdm(newItems):
         doc_len = len(item['input'])
         tfidf_vectors.append(
             tf_idf_cal.tfidf(doc_len, corpus_len, item['unigram_input'], inputCounter)
         )
     query_vector = tfidf_vectors[len(tfidf_vectors)-1]
+    # return query_vector
     query_vector = np.reshape(query_vector, (1,-1))
     # search
     sim_maxtrix = sklearn.metrics.pairwise.cosine_similarity(query_vector, tfidf_vectors)
@@ -333,6 +336,7 @@ class ItemSimilarityMatrixBuilder(object):
 
     def _save_with_django(self, sm, index, created=datetime.now()):
         logger.debug('2')
+        logger.info(f'HERE {datetime.now()} ')
         start_time = datetime.now()
         Similarity.objects.all().delete()
         logger.info(f'truncating table in {datetime.now() - start_time} seconds')

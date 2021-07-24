@@ -15,7 +15,6 @@ class NeighborhoodBasedRecs:
         self.max_candidates = 100
 
     def recommend_items(self, user_id, num=6):
-
         active_user_items = Comments.objects.filter(owner_id=user_id).order_by('-avgrating')[:100]
         # return active_user_items.values()
         return self.recommend_items_by_ratings(self, user_id, active_user_items.values())

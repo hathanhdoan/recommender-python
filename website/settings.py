@@ -90,10 +90,10 @@ WSGI_APPLICATION = 'website.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'recommender',
-        'USER': 'doan@recommender-2oclock',
-        'PASSWORD': 'Admin123456',
-        'HOST': 'recommender-2oclock.mysql.database.azure.com',
+        'NAME': 'admin_phong',
+        'USER': 'admin_daiphong',
+        'PASSWORD': 'phong123123',
+        'HOST': '150.95.111.130',
         'PORT': '3306',
     }
     # 'default': {
